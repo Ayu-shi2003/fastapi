@@ -1,4 +1,3 @@
-from typing import List
 from sqlalchemy import String,Integer,ForeignKey,create_engine,Table,Column #foreign key=creates reference from one table to another
 from sqlalchemy.orm import DeclarativeBase,Mapped,mapped_column,relationship,sessionmaker
 
@@ -57,7 +56,7 @@ class Course(Base):  #models
 
 Base.metadata.create_all(engine) #create table in database
 
-s1=Student(name="Ayushi") #entering student name
+'''s1=Student(name="Ayushi") #entering student name
 c1=Course(coursename="python") #entering coursename
 c2=Course(coursename="java") #entering coursename
 
@@ -65,4 +64,12 @@ s1.course.extend([c1,c2])
 #s1.course is a relationship extend add both the courses in studentlist
 session.add(s1) #will addstudent and courses as s1 is link with c1
 #When you add c1, SQLAlchemy sees that c1 is linked to s1 → adds s1 also It also adds c2 because it is part of s1.course
-session.commit() #saves the data in database
+session.commit() #saves the data in database'''
+
+s1=Student(name="shruti")
+s2=Student(name="sneha")
+c1=Course(coursename="MCA")
+
+c1.student.extend([s1,s2])
+session.add(c1)
+session.commit()
