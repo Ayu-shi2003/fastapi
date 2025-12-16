@@ -77,21 +77,8 @@ session.add(c1)
 #we will add c1 so automaticallyy s1 and s2 will get added as it our linked with each other
 session.commit() #saves the data into database
 
-#accessing from student<->course i.e 1 student is enrolled in how many courses
-'''student = session.query(Student).first() #selecting the student table ,first=fetching from row1
-print(student.name) #print the studentname
-for course in student.course:  #now going through for loop for course and we are taking from our student table course field
-    print(course.coursename) #now printing the coursename from course table
 
-
-#accessing course<->student i.e in 1 course how many students are enrolled
-course = session.query(Course).first() #select course table and fetch row one
-print(course.coursename) #print coursename
-for student in course.student: #take student i.e mention in course table as relationship in course.student=means linking student_course table 
-    print(student.name) #student.name=name of that student who has enrooled in the course
-
-
-#with select query
+#with select query new modern way 
 stmt = select(Student.name, Course.coursename).join(Student.course) #select statemnet start noe we are taking name from student table and coursename from course table and we are joining student_course table
 #student,course both are the class name it is used because it internally connect the student_course as we are using secondary filed in our this tables so it gets connection through it 
 result = session.execute(stmt).all()
@@ -100,7 +87,7 @@ for student_name, course_name in result:
 
 
 
-#manual way creating with join
+#manual way creating with join old method
 result = (
     session.query(Student.name, Course.coursename) #session.query=start a database session and start a select query ,student.name=select students name means from student table take name,Course.coursename=select course table coursename
     .join(student_course, Student.id == student_course.c.Student_id) #after selecting both columns from 2 tables and linking to our middle table using join student table with student_course table ,.c=accesse column of table object ,student_id=column inside student_course 
@@ -110,7 +97,7 @@ result = (
 )
 
 for row in result: #loop through each row returned from database 
-    print(row)'''
+    print(row)
 
 #backpopulates:-
 #Its a two way connection 
