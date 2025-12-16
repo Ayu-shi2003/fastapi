@@ -73,10 +73,14 @@ for user in users: #loop through each user in a list
 for addr in addresses: #loop through each address
     print(f"City: {addr.city}, User: {addr.user.name}")'''#printing cityname from address table,printing the user_name from address table taking user.name from usrr table
 
-user_to_delete = session.query(User).filter_by(name="Ayushi").first()
-if user_to_delete:
-    session.delete(user_to_delete)
+''''user_to_delete = session.query(User).filter_by(name="Ayushi").first() #looks inside user table and finds rows having ayushi and find the matching row
+if user_to_delete: #checks if user is available or not  
+    session.delete(user_to_delete) #will delete id and particular address
     session.commit()
     print("User and linked addresses deleted successfully")
-else:
-    print("User not found")
+else:  #if user does not found then it will get user not found
+    print("User not found")'''
+
+address=session.query(Address).all()
+for add in address:
+    print(f"city:{add.city},user:{add.user.name}")
