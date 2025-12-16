@@ -81,6 +81,10 @@ if user_to_delete: #checks if user is available or not
 else:  #if user does not found then it will get user not found
     print("User not found")'''
 
-address=session.query(Address).all()
-for add in address:
-    print(f"city:{add.city},user:{add.user.name}")
+result = (
+    session.query(User.name, Address.city)
+    .join(Address, User.id == Address.user_id)
+    .all()
+)
+for row in result:
+    print(row)

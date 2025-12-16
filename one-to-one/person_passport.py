@@ -56,9 +56,17 @@ session.add_all([p,pp]) #add and save data in database
 session.commit() #commit saves them permanently in database
 
 #get passport that belongs to one person
-person=session.query(Person).first()
+'''person=session.query(Person).first()
 print(person.passport.passport_number)
 
 #get person who has passport
 passport=session.query(Passport).first()
-print(passport.person.name)
+print(passport.person.name)'''
+
+result = (
+    session.query(Person.name, Passport.passport_number)
+    .join(Passport, Person.id == Passport.person_id)
+    .all()
+)
+for row in result:
+    print(row)
