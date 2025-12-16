@@ -1,4 +1,4 @@
-from sqlalchemy import String,Integer,ForeignKey,create_engine,Table,Column #foreign key=creates reference from one table to another
+from sqlalchemy import String,Integer,ForeignKey,create_engine,Table,Column,select #foreign key=creates reference from one table to another
 from sqlalchemy.orm import DeclarativeBase,Mapped,mapped_column,relationship,sessionmaker
 
 # Database URL
@@ -66,10 +66,56 @@ session.add(s1) #will addstudent and courses as s1 is link with c1
 #When you add c1, SQLAlchemy sees that c1 is linked to s1 → adds s1 also It also adds c2 because it is part of s1.course
 session.commit() #saves the data in database'''
 
-s1=Student(name="shruti")
-s2=Student(name="sneha")
-c1=Course(coursename="MCA")
+#2 students are getting enrolled for one course 
+s1=Student(name="shruti") #student1
+s2=Student(name="sneha")  #student2
+c1=Course(coursename="MCA")  #course
 
 c1.student.extend([s1,s2])
-session.add(c1)
-session.commit()
+#c1=course object .student=relationship link generated for student course and extend=to add multiple items at once 
+session.add(c1) 
+#we will add c1 so automaticallyy s1 and s2 will get added as it our linked with each other
+session.commit() #saves the data into database
+
+
+student = session.query(Student).first()
+print(student.name)
+for course in student.course:
+    print(course.coursename)
+
+
+course = session.query(Course).first()
+print(course.coursename)
+for student in course.student:
+    print(student.name)
+
+
+#with select query
+stmt = select(Student.name, Course.coursename).join(Student.course) #select statemnet start noe we are taking name from student table and coursename from course table and we are joining student_course table
+#student,course both are the class name it is used because it internally connect the student_course as we are using secondary filed in our this tables so it gets connection through it 
+result = session.execute(stmt).all()
+for student_name, course_name in result:
+    print(f"Student: {student_name}, Course: {course_name}")
+
+
+
+#manual way creating with join
+result = (
+    session.query(Student.name, Course.coursename) #session.query=start a database session and start a select query ,student.name=select students name means from student table take name,Course.coursename=select course table coursename
+    .join(student_course, Student.id == student_course.c.Student_id) #after selecting both columns from 2 tables and linking to our middle table using join student table with student_course table ,.c=accesse column of table object ,student_id=column inside student_course 
+    #.c is important as it reference to the column of middle table as middle table doest not have model it is table so we used c to access the column from that particular table
+    .join(Course, Course.id == student_course.c.course_id) #join course table into student_course table match course id with student_course id 
+    .all() #excute the query and fetching all the rows and give return
+)
+
+for row in result: #loop through each row returned from database 
+    print(row)
+
+#backpopulates:-
+#Its a two way connection 
+#student.course=a studnet enrolled in many course
+#course.student=In one course many students are enrolled
+#backpopulates its a sync between both table 
+#if we add student automatically in course table updation is seen
+#in above example i have given that s1=one studentname im adding and c1=1 courssename im adding now if i will append or extend and wirte s1 then automatically c1 will also get updated beacuse of backpopulate
+#backpopulate is a link between 2 tables 
