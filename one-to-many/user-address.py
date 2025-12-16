@@ -52,12 +52,31 @@ Base.metadata.create_all(engine)
 #create tables in database
 
 # Create user and addresses insert data in tables
-u = User(name="Ayushi")
+'''u = User(name="Ayushi")
 a1 = Address(city="Ahmedabad", user=u)
-a2 = Address(city="Rajkot", user=u)
+a2 = Address(city="Rajkot", user=u)'''
 #creates a user object u
 #creates 2 addresses a1 and a2 which links them to user u
 
-session.add(u) #add the data in user table and automatically addresses are linked to it alsoo gets the data
-session.commit() #saves the data in database 
+#session.add(u) #add the data in user table and automatically addresses are linked to it alsoo gets the data
+#session.commit() #saves the data in database 
 
+#fetch all users with their addresses
+'''users = session.query(User).all() #to take data from user table ,all=give all rows from user table
+for user in users: #loop through each user in a list 
+    print(f"User: {user.name}") #getting name column of current user
+    for address in user.addresses: #user.addresses means in user table i have give addresses column that link that 1 user have list of addresses
+        print(f"Address: {address.city}")''' #city column of address table 
+ 
+#fetch all addresses with their username
+'''addresses = session.query(Address).all() #taking address table
+for addr in addresses: #loop through each address
+    print(f"City: {addr.city}, User: {addr.user.name}")'''#printing cityname from address table,printing the user_name from address table taking user.name from usrr table
+
+user_to_delete = session.query(User).filter_by(name="Ayushi").first()
+if user_to_delete:
+    session.delete(user_to_delete)
+    session.commit()
+    print("User and linked addresses deleted successfully")
+else:
+    print("User not found")

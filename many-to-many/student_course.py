@@ -77,17 +77,18 @@ session.add(c1)
 #we will add c1 so automaticallyy s1 and s2 will get added as it our linked with each other
 session.commit() #saves the data into database
 
+#accessing from student<->course i.e 1 student is enrolled in how many courses
+'''student = session.query(Student).first() #selecting the student table ,first=fetching from row1
+print(student.name) #print the studentname
+for course in student.course:  #now going through for loop for course and we are taking from our student table course field
+    print(course.coursename) #now printing the coursename from course table
 
-student = session.query(Student).first()
-print(student.name)
-for course in student.course:
-    print(course.coursename)
 
-
-course = session.query(Course).first()
-print(course.coursename)
-for student in course.student:
-    print(student.name)
+#accessing course<->student i.e in 1 course how many students are enrolled
+course = session.query(Course).first() #select course table and fetch row one
+print(course.coursename) #print coursename
+for student in course.student: #take student i.e mention in course table as relationship in course.student=means linking student_course table 
+    print(student.name) #student.name=name of that student who has enrooled in the course
 
 
 #with select query
@@ -109,7 +110,7 @@ result = (
 )
 
 for row in result: #loop through each row returned from database 
-    print(row)
+    print(row)'''
 
 #backpopulates:-
 #Its a two way connection 
@@ -119,3 +120,38 @@ for row in result: #loop through each row returned from database
 #if we add student automatically in course table updation is seen
 #in above example i have given that s1=one studentname im adding and c1=1 courssename im adding now if i will append or extend and wirte s1 then automatically c1 will also get updated beacuse of backpopulate
 #backpopulate is a link between 2 tables 
+
+#get all students with their courses
+'''students=session.query(Student).all() #take student table
+for student in students:  #student=randomvariable name,students=above it is mention that only we need to take for the query
+    print(student.name)   #print the name of the student
+    for course in student.course:  #by using for loop student.course=current student enrolled in how many courses .course=already mention in our student table we have given backpopulates
+        print("enrolled in ",course.coursename)''' #printing the coursename for that particular student
+
+#get all courses with enrolled students
+'''course=session.query(Course).all() #select course table 
+for c in course:
+    print(c.coursename) #print coursename
+    for student in c.student: #c.student=student we are having in our course table that is backpopulates we have used 
+        print("student:",student.name) #print student name so we will get for this course this student is enrooled'''
+
+#find course of specific student
+'''student=session.query(Student).filter_by(name="shruti").first()
+for course in student.course:
+    print(course.coursename)'''
+
+#find students enrooled in specific course
+'''course=session.query(Course).filter_by(coursename="MCA").first()
+for student in course.student:
+    print(student.name)'''
+
+#count how many courses a student has
+student = session.query(Student).filter_by(name="Ayushi").first()
+print(len(student.course))
+
+#Count how many students are in a course
+course = session.query(Course).filter_by(coursename="MCA").first()
+print(len(course.student))
+
+
+
